@@ -459,3 +459,51 @@
     padding: 20px 20px 10px;
   }
 }
+
+/* Tab toggling in step 1 */
+.tabToggleRow {
+  display: flex;
+  background: rgba(0, 0, 0, 0.03);
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.toggleTabBtn {
+  flex: 1;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.toggleTabBtn:hover {
+  color: var(--text-primary);
+}
+
+.toggleTabBtnActive {
+  background: #fff;
+  color: var(--brand-orange-start);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.selectInput {
+  height: 48px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: #fff;
+  padding: 0 20px;
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.selectInput:focus {
+  border-color: var(--brand-orange-start);
+  box-shadow: 0 0 0 3px rgba(229, 104, 32, 0.1);
+}
+

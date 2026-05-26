@@ -14,6 +14,7 @@ import authRouter from './routes/auth';
 import assignmentRouter from './routes/assignment';
 import groupRouter from './routes/group';
 import toolkitRouter from './routes/toolkit';
+import libraryRouter from './routes/library';
 
 const app = express();
 const server = createServer(app);
@@ -39,6 +40,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/assignments', assignmentRouter);
 app.use('/api/groups', groupRouter);
 app.use('/api/toolkit', toolkitRouter);
+app.use('/api/library', libraryRouter);
 
 // Health Check Endpoint
 app.get('/health', (_req: Request, res: Response) => {

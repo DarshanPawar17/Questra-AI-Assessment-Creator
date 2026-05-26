@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import AssignmentsDashboard from './AssignmentsDashboard';
 import GroupsDashboard from './GroupsDashboard';
 import ToolkitDashboard from './ToolkitDashboard';
+import LibraryDashboard from './LibraryDashboard';
 import { Sparkles, BookOpen, Users, Settings as SettingsIcon, FileText, Home as HomeIcon, LogOut, CheckCircle, Clock } from 'lucide-react';
 import styles from './DashboardShell.module.css';
 
@@ -75,13 +76,7 @@ export default function DashboardShell() {
         return <ToolkitDashboard />;
 
       case 'library':
-        return (
-          <div className={styles.placeholderContainer}>
-            <BookOpen size={48} className={styles.placeholderIcon} />
-            <h2>My Library</h2>
-            <p>Access uploaded study guides, syllabi files, and template papers. (Feature coming soon)</p>
-          </div>
-        );
+        return <LibraryDashboard />;
 
       case 'settings':
         return (

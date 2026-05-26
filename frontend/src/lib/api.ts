@@ -273,3 +273,39 @@ export const toolkitApi = {
     }),
 };
 
+export interface ILibraryDoc {
+  _id: string;
+  title: string;
+  description?: string;
+  subject?: string;
+  grade?: string;
+  fileType: string;
+  filePath: string;
+  extractedText: string;
+  creator: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const libraryApi = {
+  list: (filters: { subject?: string; grade?: string } = {}) => {
+    const params = new URLSearchParams();
+    if (filters.subject) params.append('subject', filters.subject);
+    if (filters.grade) params.append('grade', filters.grade);
+    return apiFetch<ILibraryDoc[]>(`/api/library?${params.toString()}`);
+  },
+
+  upload: (formData: FormData) =>
+    apiFetch<ILibraryDoc>('/api/library', {
+      method: 'POST',
+      body: formData,
+      isFormData: true,
+    }),
+
+  delete: (id: string) =>
+    apiFetch<{ message: string }>(`/api/library/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
+

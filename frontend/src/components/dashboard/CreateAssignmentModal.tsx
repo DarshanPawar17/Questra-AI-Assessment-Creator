@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '@/store/useStore';
 import { X, Upload, FileText, Loader2, ArrowLeft, Calendar, Clock, BookOpen, Check } from 'lucide-react';
 import styles from './CreateAssignmentModal.module.css';
@@ -10,7 +10,7 @@ interface CreateAssignmentModalProps {
 }
 
 export default function CreateAssignmentModal({ onClose }: CreateAssignmentModalProps) {
-  const { createAssignment } = useStore();
+  const { createAssignment, libraryDocs, fetchLibraryDocs } = useStore();
 
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,6 +21,13 @@ export default function CreateAssignmentModal({ onClose }: CreateAssignmentModal
   const [subject, setSubject] = useState('');
   const [grade, setGrade] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [materialSource, setMaterialSource] = useState<'upload' | 'library'>('upload');
+  const [selectedLibraryDocId, setSelectedLibraryDocId] = useState('');
+
+  // Fetch library documents on load
+  useEffect(() => {
+    fetchLibraryDocs();
+  }, [fetchLibraryDocs]);
 
   // Step 2 states
   const [totalQuestions, setTotalQuestions] = useState(10);
@@ -76,8 +83,11 @@ export default function CreateAssignmentModal({ onClose }: CreateAssignmentModal
       if (additionalInstructions.trim()) {
         formData.append('additionalInstructions', additionalInstructions.trim());
       }
-      if (file) {
+      
+      if (materialSource === 'upload' && file) {
         formData.append('file', file);
+      } else if (materialSource === 'library' && selectedLibraryDocId) {
+        formData.append('libraryDocId', selectedLibraryDocId);
       }
 
       await createAssignment(formData);
@@ -162,27 +172,72 @@ export default function CreateAssignmentModal({ onClose }: CreateAssignmentModal
 
             <div className={styles.formGroup}>
               <label className={styles.label}>Reference Material (Optional)</label>
-              <div className={styles.uploadZone}>
-                <input
-                  type="file"
-                  id="file-upload"
-                  className={styles.fileInput}
-                  accept=".pdf,.docx,.txt"
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="file-upload" className={styles.uploadLabel}>
-                  <Upload size={32} className={styles.uploadIcon} />
-                  <span className={styles.uploadTitle}>
-                    {file ? file.name : 'Upload syllabus, notes, or sample text'}
-                  </span>
-                  <span className={styles.uploadMeta}>Supports PDF, DOCX, TXT up to 10MB</span>
-                </label>
+              
+              <div className={styles.tabToggleRow}>
+                <button
+                  type="button"
+                  className={`${styles.toggleTabBtn} ${materialSource === 'upload' ? styles.toggleTabBtnActive : ''}`}
+                  onClick={() => setMaterialSource('upload')}
+                >
+                  Upload New File
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.toggleTabBtn} ${materialSource === 'library' ? styles.toggleTabBtnActive : ''}`}
+                  onClick={() => setMaterialSource('library')}
+                >
+                  Choose from My Library
+                </button>
               </div>
-              {file && (
-                <div className={styles.fileDetails}>
-                  <FileText size={16} />
-                  <span className={styles.fileName}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
-                  <button className={styles.removeFileBtn} onClick={() => setFile(null)}>Remove</button>
+
+              {materialSource === 'upload' ? (
+                <>
+                  <div className={styles.uploadZone}>
+                    <input
+                      type="file"
+                      id="file-upload"
+                      className={styles.fileInput}
+                      accept=".pdf,.docx,.txt"
+                      onChange={handleFileChange}
+                    />
+                    <label htmlFor="file-upload" className={styles.uploadLabel}>
+                      <Upload size={32} className={styles.uploadIcon} />
+                      <span className={styles.uploadTitle}>
+                        {file ? file.name : 'Upload syllabus, notes, or sample text'}
+                      </span>
+                      <span className={styles.uploadMeta}>Supports PDF, DOCX, TXT up to 10MB</span>
+                    </label>
+                  </div>
+                  {file && (
+                    <div className={styles.fileDetails}>
+                      <FileText size={16} />
+                      <span className={styles.fileName}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+                      <button className={styles.removeFileBtn} type="button" onClick={() => setFile(null)}>Remove</button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={styles.formGroup}>
+                  <select
+                    className={styles.selectInput}
+                    value={selectedLibraryDocId}
+                    onChange={(e) => {
+                      setSelectedLibraryDocId(e.target.value);
+                      const doc = libraryDocs.find((d) => d._id === e.target.value);
+                      if (doc) {
+                        if (!title) setTitle(doc.title);
+                        if (!subject && doc.subject) setSubject(doc.subject);
+                        if (!grade && doc.grade) setGrade(doc.grade);
+                      }
+                    }}
+                  >
+                    <option value="">-- Choose a Library Document --</option>
+                    {libraryDocs.map((doc) => (
+                      <option key={doc._id} value={doc._id}>
+                        {doc.title} ({doc.subject || 'No Subject'} • {doc.grade || 'No Grade'})
+                      </option>
+                    ))}
+                  </select>
                 </div>
               )}
             </div>

@@ -1,5 +1,6 @@
 import { Router, Response } from 'express';
 import Assignment from '../models/Assignment';
+import LibraryDocument from '../models/LibraryDocument';
 import { authenticateToken, AuthRequest } from '../config/auth';
 import { uploadMiddleware, extractTextFromFile } from '../utils/parser';
 import { questionGenerationQueue, pdfGenerationQueue } from '../queues/queue';
@@ -22,7 +23,8 @@ router.post(
         totalQuestions,
         totalMarks,
         additionalInstructions,
-        dueDate
+        dueDate,
+        libraryDocId
       } = req.body;
 
       if (!title || !subject || !grade || !totalQuestions || !totalMarks || !questionTypes) {
@@ -43,7 +45,7 @@ router.post(
         return;
       }
 
-      // Check file upload text extraction
+      // Check file upload text extraction or fetch from Library
       let sourceText = '';
       let sourceFilePath = '';
 
@@ -53,6 +55,19 @@ router.post(
           sourceFilePath = `/uploads/temp/${req.file.filename}`;
         } catch (err: unknown) {
           res.status(400).json({ error: err instanceof Error ? err.message : 'Error parsing file.' });
+          return;
+        }
+      } else if (libraryDocId) {
+        try {
+          const doc = await LibraryDocument.findOne({ _id: libraryDocId, creator: req.userId });
+          if (!doc) {
+            res.status(404).json({ error: 'Selected library document not found or unauthorized.' });
+            return;
+          }
+          sourceText = doc.extractedText;
+          sourceFilePath = doc.filePath;
+        } catch (err: any) {
+          res.status(500).json({ error: 'Failed to retrieve selected library document.' });
           return;
         }
       }

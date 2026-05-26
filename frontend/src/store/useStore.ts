@@ -3,7 +3,7 @@
  * Manages: auth state, sidebar navigation, assignment data, search/filters, creation
  */
 import { create } from 'zustand';
-import { authApi, assignmentApi, groupApi, toolkitApi, IAssignment, IGroup, IRubric, ILessonPlan } from '@/lib/api';
+import { authApi, assignmentApi, groupApi, toolkitApi, libraryApi, IAssignment, IGroup, IRubric, ILessonPlan, ILibraryDoc } from '@/lib/api';
 
 // ==================== Types ====================
 
@@ -61,6 +61,11 @@ interface AppState {
   isToolkitLoading: boolean;
   toolkitError: string | null;
 
+  // Library
+  libraryDocs: ILibraryDoc[];
+  isLibraryLoading: boolean;
+  libraryError: string | null;
+
   // Actions - Auth
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
@@ -97,6 +102,11 @@ interface AppState {
   generateLessonPlan: (topic: string, grade: string, duration: string) => Promise<ILessonPlan>;
   exportToolkitPdf: (type: 'rubric' | 'lesson', data: any) => Promise<string>;
   clearToolkit: () => void;
+
+  // Actions - Library
+  fetchLibraryDocs: (filters?: { subject?: string; grade?: string }) => Promise<void>;
+  uploadLibraryDoc: (file: File, title: string, subject: string, grade: string, description: string) => Promise<ILibraryDoc>;
+  deleteLibraryDoc: (id: string) => Promise<void>;
 }
 
 // ==================== Store ====================
@@ -138,6 +148,11 @@ export const useStore = create<AppState>((set, get) => ({
   activeLessonPlan: null,
   isToolkitLoading: false,
   toolkitError: null,
+
+  // Library state
+  libraryDocs: [],
+  isLibraryLoading: false,
+  libraryError: null,
 
   // ---- Auth Actions ----
 
@@ -194,6 +209,8 @@ export const useStore = create<AppState>((set, get) => ({
       activeRubric: null,
       activeLessonPlan: null,
       toolkitError: null,
+      libraryDocs: [],
+      libraryError: null,
     });
   },
 
@@ -493,4 +510,55 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   clearToolkit: () => set({ activeRubric: null, activeLessonPlan: null, toolkitError: null }),
+
+  // ---- Library Actions ----
+
+  fetchLibraryDocs: async (filters) => {
+    set({ isLibraryLoading: true, libraryError: null });
+    try {
+      const docs = await libraryApi.list(filters);
+      set({ libraryDocs: docs, isLibraryLoading: false });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch library documents';
+      set({ libraryError: message, isLibraryLoading: false });
+    }
+  },
+
+  uploadLibraryDoc: async (file, title, subject, grade, description) => {
+    set({ isLibraryLoading: true, libraryError: null });
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', title);
+      formData.append('subject', subject);
+      formData.append('grade', grade);
+      formData.append('description', description);
+
+      const doc = await libraryApi.upload(formData);
+      set((state) => ({
+        libraryDocs: [doc, ...state.libraryDocs],
+        isLibraryLoading: false,
+      }));
+      return doc;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to upload library document';
+      set({ libraryError: message, isLibraryLoading: false });
+      throw err;
+    }
+  },
+
+  deleteLibraryDoc: async (id) => {
+    set({ isLibraryLoading: true, libraryError: null });
+    try {
+      await libraryApi.delete(id);
+      set((state) => ({
+        libraryDocs: state.libraryDocs.filter((d) => d._id !== id),
+        isLibraryLoading: false,
+      }));
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete library document';
+      set({ libraryError: message, isLibraryLoading: false });
+      throw err;
+    }
+  },
 }));
