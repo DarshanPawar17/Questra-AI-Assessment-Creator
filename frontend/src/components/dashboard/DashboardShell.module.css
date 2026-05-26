@@ -1,0 +1,211 @@
+/* ===================================
+   Dashboard Shell – Main Layout
+   =================================== */
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 40px 48px;
+  min-height: 100vh;
+}
+
+.contentInner {
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Home Welcome Layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.welcomeBanner {
+  background: var(--brand-gradient);
+  border-radius: var(--radius-card-outer);
+  padding: 48px;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(229, 104, 32, 0.15);
+}
+
+.welcomeTitle {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.welcomeSub {
+  font-size: 15px;
+  opacity: 0.9;
+  margin-top: 10px;
+  max-width: 600px;
+  font-family: var(--font-secondary);
+}
+
+/* Stats */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.statCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.statIcon {
+  color: var(--brand-orange-start);
+  background: rgba(229, 104, 32, 0.08);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.statVal {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.statLbl {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Sections */
+.dashboardSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.quickStartGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.quickStartCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.quickStartCard:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.quickStartCard h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.quickStartCard p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.orangeIcon {
+  color: var(--brand-orange-start);
+}
+
+/* Placeholders */
+.placeholderContainer {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  max-width: 580px;
+  margin: 80px auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.placeholderIcon {
+  color: var(--text-muted);
+}
+
+.placeholderContainer h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.placeholderContainer p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .statsGrid, .quickStartGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+    padding: 24px 16px;
+  }
+  .welcomeBanner {
+    padding: 28px;
+  }
+  .welcomeTitle {
+    font-size: 28px;
+  }
+}

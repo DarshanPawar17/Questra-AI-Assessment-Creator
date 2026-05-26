@@ -1,0 +1,619 @@
+/* ===================================
+   AssignmentDetailView CSS Module
+   =================================== */
+
+.loadingScreen, .errorScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 400px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.redIcon {
+  color: #c0392b;
+}
+
+/* --- Progress Card (Status = Pending/Generating) --- */
+.progressCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 18px;
+}
+
+.generatingHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.generatingHeader h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.sparkleIcon {
+  color: var(--brand-orange-start);
+  animation: pulse 1.5s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.progressStatus {
+  background: rgba(229, 104, 32, 0.1);
+  color: var(--brand-orange-start);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progressIntro {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.progressBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-card-inner);
+  padding: 28px;
+  border: 1px solid var(--border-light);
+}
+
+.progressBarWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.progressBarBg {
+  flex: 1;
+  height: 12px;
+  background: var(--bg-off-white-40);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--brand-gradient);
+  border-radius: 100px;
+  transition: width 0.4s cubic-bezier(0.1, 0.8, 0.25, 1);
+}
+
+.progressPercentage {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--brand-orange-start);
+  min-width: 44px;
+  text-align: right;
+}
+
+.progressStatusMessage {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Console logs */
+.logsConsole {
+  background: var(--bg-dark-grey);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.consoleHeader {
+  background: #1f1f1f;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.consoleDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green-active);
+  box-shadow: 0 0 0 3px var(--green-active-glow);
+}
+
+.consoleTitle {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.02em;
+}
+
+.consoleBody {
+  padding: 16px 20px;
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.logLine {
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+/* --- Failed State --- */
+.failedCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.failedMessage {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 440px;
+  line-height: 1.5;
+}
+
+.retryBtn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-btn);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.retryBtn:hover {
+  background: #2b2b2b;
+  transform: translateY(-1px);
+}
+
+/* --- Interactive Editor Workspace --- */
+.editorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.editorToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: var(--bg-white-50);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 20px 32px;
+}
+
+.editorTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.editorSubtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.editorActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.actionBtn {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-btn);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.saveBtn {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+}
+
+.saveBtn:hover {
+  border-color: var(--brand-orange-start);
+  color: var(--brand-orange-start);
+}
+
+.compileBtn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.compileBtn:hover {
+  background: #2b2b2b;
+}
+
+.downloadBtn {
+  background: var(--brand-gradient);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(229, 104, 32, 0.15);
+}
+
+.downloadBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(229, 104, 32, 0.25);
+}
+
+.editorWorkspace {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.sectionCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 16px;
+}
+
+.sectionHeaderMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectionBadge {
+  background: var(--bg-dark-grey);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.sectionTitleInput {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.sectionTitleInput:focus, .sectionInstructionInput:focus {
+  border-bottom: 1px solid var(--brand-orange-start);
+}
+
+.sectionInstructionInput {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.questionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.questionItem {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: border-color 0.2s ease;
+}
+
+.questionItem:hover {
+  border-color: rgba(229, 104, 32, 0.25);
+}
+
+.questionMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.questionNumber {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brand-orange-start);
+}
+
+.typeBadge {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.difficultySelect {
+  height: 28px;
+  border: 1px solid var(--border-light);
+  border-radius: 100px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-white);
+  cursor: pointer;
+}
+
+.marksStepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 100px;
+  background: var(--bg-white);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.marksStepper button {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.marksValue {
+  color: var(--text-primary);
+}
+
+.deleteQBtn {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.deleteQBtn:hover {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.questionTextInput {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.questionTextInput:focus {
+  border-color: var(--border-light);
+  background: var(--bg-white);
+}
+
+/* MCQ options list */
+.optionsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.optionsTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.optionInputRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  padding: 0 12px;
+  height: 38px;
+}
+
+.optionLabel {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--brand-orange-start);
+}
+
+.optionInputRow input {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.removeOptBtn {
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.removeOptBtn:hover {
+  color: #e74c3c;
+}
+
+.addOptBtn {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-orange-start);
+  padding: 4px 8px;
+}
+
+.correctAnswerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-top: 1px dashed rgba(0, 0, 0, 0.05);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.correctAnswerLabel {
+  color: var(--text-secondary);
+}
+
+.correctAnswerInput {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  padding: 2px 4px;
+}
+
+.correctAnswerSelect {
+  height: 28px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-white);
+  cursor: pointer;
+}
+
+.sectionActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.addQuestionBtn {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px dashed var(--border-dashed);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.addQuestionBtn:hover {
+  border-color: var(--brand-orange-start);
+  color: var(--brand-orange-start);
+  background: rgba(229, 104, 32, 0.02);
+}
+
+@media (max-width: 768px) {
+  .editorToolbar {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 16px;
+  }
+  .optionsGrid {
+    grid-template-columns: 1fr;
+  }
+  .sectionCard {
+    padding: 20px;
+  }
+  .correctAnswerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .correctAnswerInput {
+    width: 100%;
+  }
+}

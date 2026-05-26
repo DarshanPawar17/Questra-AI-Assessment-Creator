@@ -1,0 +1,461 @@
+/* ===================================
+   CreateAssignmentModal CSS Module
+   =================================== */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 40px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+/* Progress bar */
+.progressContainer {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.progressHalf {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+}
+
+.stepNum {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-off-white-40);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.progressActive {
+  color: var(--brand-orange-start);
+  background: rgba(229, 104, 32, 0.04);
+}
+
+.progressActive .stepNum {
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+/* Error Box */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 40px 0;
+  padding: 12px 16px;
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  border-radius: 12px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+/* Step Content */
+.stepContent {
+  padding: 32px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formRow {
+  width: 100%;
+}
+
+.formRowDouble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding-left: 4px;
+}
+
+.input {
+  height: 48px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: var(--bg-white);
+  padding: 0 20px;
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--brand-orange-start);
+  box-shadow: 0 0 0 3px rgba(229, 104, 32, 0.1);
+}
+
+/* Stepper wrapper */
+.stepperWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: var(--bg-white);
+  padding: 0 6px;
+}
+
+.stepperBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-off-white);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.stepperBtn:hover {
+  background: var(--bg-off-white-40);
+}
+
+.stepperValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Upload zone */
+.uploadZone {
+  position: relative;
+  border: 2px dashed var(--border-dashed);
+  border-radius: var(--radius-card-inner);
+  background: rgba(255, 255, 255, 0.4);
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uploadZone:hover {
+  border-color: var(--brand-orange-start);
+  background: rgba(229, 104, 32, 0.02);
+}
+
+.fileInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.uploadIcon {
+  color: var(--text-muted);
+}
+
+.uploadTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.uploadMeta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.fileDetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.fileName {
+  font-weight: 600;
+  flex: 1;
+}
+
+.removeFileBtn {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c0392b;
+}
+
+/* Checkboxes grid */
+.typeCheckboxGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.typeSelector {
+  height: 48px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: var(--bg-white);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.typeSelector:hover {
+  border-color: var(--brand-orange-start);
+  color: var(--text-primary);
+}
+
+.typeSelected {
+  background: rgba(229, 104, 32, 0.05);
+  border-color: var(--brand-orange-start);
+  color: var(--brand-orange-start);
+}
+
+.checkboxCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-white);
+  color: var(--brand-orange-start);
+}
+
+.typeSelected .checkboxCircle {
+  border-color: var(--brand-orange-start);
+  background: var(--bg-white);
+}
+
+.textarea {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-textarea);
+  background: var(--bg-white);
+  padding: 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  resize: none;
+  transition: all 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: var(--brand-orange-start);
+  box-shadow: 0 0 0 3px rgba(229, 104, 32, 0.1);
+}
+
+/* Footer buttons */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 24px;
+  margin-top: 12px;
+}
+
+.cancelBtn {
+  height: 48px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-btn);
+  transition: background 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.nextBtn {
+  height: 48px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--btn-primary-text);
+  background: var(--btn-primary-bg);
+  border-radius: var(--radius-btn);
+  transition: all 0.2s ease;
+}
+
+.nextBtn:hover {
+  background: #2b2b2b;
+}
+
+.backStepBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-right: auto;
+  border-radius: var(--radius-btn);
+  transition: background 0.2s ease;
+}
+
+.backStepBtn:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.generateBtn {
+  height: 48px;
+  padding: 0 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+  background: var(--brand-gradient);
+  border-radius: var(--radius-btn);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(229, 104, 32, 0.2);
+  transition: all 0.2s ease;
+}
+
+.generateBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 104, 32, 0.3);
+}
+
+.generateBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .formRowDouble, .typeCheckboxGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .container {
+    border-radius: var(--radius-sidebar);
+  }
+  .stepContent {
+    padding: 20px;
+  }
+  .header {
+    padding: 20px 20px 10px;
+  }
+}
