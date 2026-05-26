@@ -40,4 +40,5 @@ backend/uploads/
 backend/temp/
 backend/public/uploads/
 frontend/public/downloads/
+*.pdf
 
