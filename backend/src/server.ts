@@ -12,6 +12,7 @@ import { initGenerationWorker } from './workers/generation.worker';
 import { initPDFWorker } from './workers/pdf.worker';
 import authRouter from './routes/auth';
 import assignmentRouter from './routes/assignment';
+import groupRouter from './routes/group';
 
 const app = express();
 const server = createServer(app);
@@ -35,6 +36,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 // API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/assignments', assignmentRouter);
+app.use('/api/groups', groupRouter);
 
 // Health Check Endpoint
 app.get('/health', (_req: Request, res: Response) => {

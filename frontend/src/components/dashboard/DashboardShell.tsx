@@ -3,6 +3,7 @@
 import { useStore } from '@/store/useStore';
 import Sidebar from './Sidebar';
 import AssignmentsDashboard from './AssignmentsDashboard';
+import GroupsDashboard from './GroupsDashboard';
 import { Sparkles, BookOpen, Users, Settings as SettingsIcon, FileText, Home as HomeIcon, LogOut, CheckCircle, Clock } from 'lucide-react';
 import styles from './DashboardShell.module.css';
 
@@ -67,13 +68,7 @@ export default function DashboardShell() {
         );
 
       case 'groups':
-        return (
-          <div className={styles.placeholderContainer}>
-            <Users size={48} className={styles.placeholderIcon} />
-            <h2>My Groups / Classes</h2>
-            <p>Organize students, review class grades, and share assignments. (Feature coming soon)</p>
-          </div>
-        );
+        return <GroupsDashboard />;
 
       case 'toolkit':
         return (

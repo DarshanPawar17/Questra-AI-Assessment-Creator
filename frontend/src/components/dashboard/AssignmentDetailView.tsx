@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { useStore } from '@/store/useStore';
 import { io, Socket } from 'socket.io-client';
 import {
@@ -19,6 +19,8 @@ import {
   RefreshCw,
   HelpCircle,
   Menu,
+  Users,
+  X,
 } from 'lucide-react';
 import styles from './AssignmentDetailView.module.css';
 import { IAssignment, ISection, IQuestion } from '@/lib/api';
@@ -36,6 +38,9 @@ export default function AssignmentDetailView({ assignmentId }: AssignmentDetailV
     regeneratePdfOnServer,
     isDetailLoading,
     detailError,
+    groups,
+    fetchGroups,
+    assignPaperToGroup,
   } = useStore();
 
   // Socket state
@@ -49,10 +54,21 @@ export default function AssignmentDetailView({ assignmentId }: AssignmentDetailV
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isCompiling, setIsCompiling] = useState(false);
 
+  // Assign modal state
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [isAssigning, setIsAssigning] = useState(false);
+
   // Load details on mount
   useEffect(() => {
     fetchAssignmentDetails(assignmentId);
   }, [assignmentId, fetchAssignmentDetails]);
+
+  // Load groups on mount
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
 
   // Set local editable sections when assignment finishes loading or updates
   useEffect(() => {
@@ -211,6 +227,23 @@ export default function AssignmentDetailView({ assignmentId }: AssignmentDetailV
     }
   };
 
+  const handleAssignSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!selectedGroupId || !activeAssignment) return;
+    setIsAssigning(true);
+    try {
+      await assignPaperToGroup(selectedGroupId, activeAssignment._id, dueDate || undefined);
+      alert('Assessment successfully assigned to the class group!');
+      setShowAssignModal(false);
+      setSelectedGroupId('');
+      setDueDate('');
+    } catch (err: any) {
+      alert(err.message || 'Failed to assign paper.');
+    } finally {
+      setIsAssigning(false);
+    }
+  };
+
   if (isDetailLoading && !activeAssignment) {
     return (
       <div className={styles.loadingScreen}>
@@ -310,6 +343,17 @@ export default function AssignmentDetailView({ assignmentId }: AssignmentDetailV
         </div>
 
         <div className={styles.editorActions}>
+          {pdfPath && (
+            <button
+              className={`${styles.actionBtn} ${styles.saveBtn}`}
+              onClick={() => setShowAssignModal(true)}
+              title="Assign this assessment to a class group"
+            >
+              <Users size={16} />
+              <span>Assign to Class</span>
+            </button>
+          )}
+
           <button
             className={`${styles.actionBtn} ${styles.saveBtn}`}
             onClick={handleSaveChanges}
@@ -539,6 +583,63 @@ export default function AssignmentDetailView({ assignmentId }: AssignmentDetailV
           </div>
         ))}
       </div>
+
+      {/* Assign to Class Modal */}
+      {showAssignModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Assign Assessment to Class Group</h3>
+              <button onClick={() => setShowAssignModal(false)} className={styles.closeModalBtn}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAssignSubmit} className={styles.modalForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="assignToGroupSelect">Select Class Group</label>
+                <select
+                  id="assignToGroupSelect"
+                  value={selectedGroupId}
+                  onChange={(e) => setSelectedGroupId(e.target.value)}
+                  required
+                >
+                  <option value="">-- Select Class --</option>
+                  {groups.map((group) => (
+                    <option key={group._id} value={group._id}>
+                      {group.name} ({group.subject} • {group.grade})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="dueDateSelect">Due Date (Optional)</label>
+                <input
+                  id="dueDateSelect"
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.formActions}>
+                <button
+                  type="button"
+                  onClick={() => setShowAssignModal(false)}
+                  className={styles.cancelBtn}
+                  disabled={isAssigning}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className={styles.submitBtn} disabled={isAssigning}>
+                  {isAssigning ? 'Assigning...' : 'Assign Paper'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

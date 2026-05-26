@@ -617,3 +617,136 @@
     width: 100%;
   }
 }
+
+/* Modals Overlay & Content */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInModal 0.2s ease-out;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-card-outer);
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideUpModal 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modalHeader h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.closeModalBtn {
+  color: var(--text-muted);
+}
+
+.closeModalBtn:hover {
+  color: var(--text-primary);
+}
+
+.modalForm {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.formGroup input, .formGroup select, .formGroup textarea {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.formGroup input:focus, .formGroup select:focus, .formGroup textarea:focus {
+  border-color: var(--brand-orange-start);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 20px;
+  margin-top: 8px;
+}
+
+.cancelBtn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-btn);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cancelBtn:hover {
+  background: var(--bg-off-white-40);
+}
+
+.submitBtn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-btn);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.submitBtn:hover {
+  background: #2b2b2b;
+}
+

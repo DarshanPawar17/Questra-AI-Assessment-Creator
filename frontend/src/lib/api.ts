@@ -138,6 +138,25 @@ export interface CreateAssignmentResponse {
   assignment: IAssignment;
 }
 
+export interface IGroupAssignment {
+  assignmentId: IAssignment | string;
+  assignedAt: string;
+  dueDate?: string;
+}
+
+export interface IGroup {
+  _id: string;
+  name: string;
+  grade: string;
+  subject: string;
+  description?: string;
+  creator: string;
+  students: string[];
+  assignments: IGroupAssignment[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const assignmentApi = {
   list: (filters: { subject?: string; grade?: string; status?: string; page?: number; limit?: number } = {}) => {
     const params = new URLSearchParams();
@@ -168,6 +187,35 @@ export const assignmentApi = {
   regeneratePdf: (id: string) =>
     apiFetch<{ message: string }>(`/api/assignments/${id}/regenerate-pdf`, {
       method: 'POST',
+    }),
+};
+
+export const groupApi = {
+  list: () => apiFetch<IGroup[]>('/api/groups'),
+
+  get: (id: string) => apiFetch<IGroup>(`/api/groups/${id}`),
+
+  create: (body: Partial<IGroup>) =>
+    apiFetch<IGroup>('/api/groups', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  update: (id: string, body: Partial<IGroup>) =>
+    apiFetch<IGroup>(`/api/groups/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+
+  delete: (id: string) =>
+    apiFetch<{ message: string }>(`/api/groups/${id}`, {
+      method: 'DELETE',
+    }),
+
+  assign: (groupId: string, assignmentId: string, dueDate?: string) =>
+    apiFetch<IGroup>(`/api/groups/${groupId}/assign`, {
+      method: 'POST',
+      body: JSON.stringify({ assignmentId, dueDate }),
     }),
 };
 

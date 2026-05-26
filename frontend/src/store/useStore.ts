@@ -3,7 +3,7 @@
  * Manages: auth state, sidebar navigation, assignment data, search/filters, creation
  */
 import { create } from 'zustand';
-import { authApi, assignmentApi, IAssignment } from '@/lib/api';
+import { authApi, assignmentApi, groupApi, IAssignment, IGroup } from '@/lib/api';
 
 // ==================== Types ====================
 
@@ -49,6 +49,12 @@ interface AppState {
   isDetailLoading: boolean;
   detailError: string | null;
 
+  // Groups
+  groups: IGroup[];
+  activeGroup: IGroup | null;
+  isGroupsLoading: boolean;
+  groupsError: string | null;
+
   // Actions - Auth
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
@@ -71,6 +77,14 @@ interface AppState {
   createAssignment: (formData: FormData) => Promise<IAssignment>;
   updateAssignmentOnServer: (id: string, body: Partial<IAssignment>) => Promise<void>;
   regeneratePdfOnServer: (id: string) => Promise<void>;
+
+  // Actions - Groups
+  fetchGroups: () => Promise<void>;
+  fetchGroupDetails: (id: string) => Promise<void>;
+  createGroup: (body: Partial<IGroup>) => Promise<IGroup>;
+  updateGroup: (id: string, body: Partial<IGroup>) => Promise<void>;
+  deleteGroup: (id: string) => Promise<void>;
+  assignPaperToGroup: (groupId: string, assignmentId: string, dueDate?: string) => Promise<void>;
 }
 
 // ==================== Store ====================
@@ -101,6 +115,12 @@ export const useStore = create<AppState>((set, get) => ({
   isDetailLoading: false,
   detailError: null,
 
+  // Groups state
+  groups: [],
+  activeGroup: null,
+  isGroupsLoading: false,
+  groupsError: null,
+
   // ---- Auth Actions ----
 
   login: async (username, password) => {
@@ -113,8 +133,9 @@ export const useStore = create<AppState>((set, get) => ({
         token: data.token,
         isAuthLoading: false,
       });
-      // Immediately load assignments
+      // Immediately load assignments and groups
       get().fetchAssignments();
+      get().fetchGroups();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Login failed';
       set({ authError: message, isAuthLoading: false });
@@ -131,8 +152,9 @@ export const useStore = create<AppState>((set, get) => ({
         token: data.token,
         isAuthLoading: false,
       });
-      // Immediately load assignments
+      // Immediately load assignments and groups
       get().fetchAssignments();
+      get().fetchGroups();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Registration failed';
       set({ authError: message, isAuthLoading: false });
@@ -149,6 +171,8 @@ export const useStore = create<AppState>((set, get) => ({
       activeTab: 'assignments',
       assignments: [],
       activeAssignment: null,
+      groups: [],
+      activeGroup: null,
     });
   },
 
@@ -169,8 +193,9 @@ export const useStore = create<AppState>((set, get) => ({
         token,
         isAuthLoading: false,
       });
-      // Restore assignments
+      // Restore assignments and groups
       get().fetchAssignments();
+      get().fetchGroups();
     } catch {
       // Token expired or invalid
       localStorage.removeItem('token');
@@ -303,6 +328,104 @@ export const useStore = create<AppState>((set, get) => ({
       get().updateAssignmentInStore(id, { status: 'generating' });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to compile PDF';
+      throw new Error(message);
+    }
+  },
+
+  // ---- Groups Actions ----
+
+  fetchGroups: async () => {
+    if (!get().token) return;
+    set({ isGroupsLoading: true, groupsError: null });
+    try {
+      const data = await groupApi.list();
+      set({ groups: data, isGroupsLoading: false });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch groups';
+      set({ groupsError: message, isGroupsLoading: false });
+    }
+  },
+
+  fetchGroupDetails: async (id) => {
+    set({ isGroupsLoading: true, groupsError: null });
+    try {
+      const data = await groupApi.get(id);
+      set({ activeGroup: data, isGroupsLoading: false });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch group details';
+      set({ groupsError: message, isGroupsLoading: false });
+    }
+  },
+
+  createGroup: async (body) => {
+    set({ isGroupsLoading: true, groupsError: null });
+    try {
+      const data = await groupApi.create(body);
+      set((state) => ({
+        groups: [data, ...state.groups],
+        isGroupsLoading: false,
+      }));
+      return data;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create group';
+      set({ groupsError: message, isGroupsLoading: false });
+      throw err;
+    }
+  },
+
+  updateGroup: async (id, body) => {
+    set({ isGroupsLoading: true, groupsError: null });
+    try {
+      const data = await groupApi.update(id, body);
+      set((state) => {
+        const updatedList = state.groups.map((g) => (g._id === id ? data : g));
+        const updatedActive = state.activeGroup && state.activeGroup._id === id ? data : state.activeGroup;
+        return {
+          groups: updatedList,
+          activeGroup: updatedActive,
+          isGroupsLoading: false,
+        };
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update group';
+      set({ groupsError: message, isGroupsLoading: false });
+      throw err;
+    }
+  },
+
+  deleteGroup: async (id) => {
+    set({ isGroupsLoading: true, groupsError: null });
+    try {
+      await groupApi.delete(id);
+      set((state) => {
+        const updatedList = state.groups.filter((g) => g._id !== id);
+        const updatedActive = state.activeGroup && state.activeGroup._id === id ? null : state.activeGroup;
+        return {
+          groups: updatedList,
+          activeGroup: updatedActive,
+          isGroupsLoading: false,
+        };
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete group';
+      set({ groupsError: message, isGroupsLoading: false });
+      throw err;
+    }
+  },
+
+  assignPaperToGroup: async (groupId, assignmentId, dueDate) => {
+    try {
+      const data = await groupApi.assign(groupId, assignmentId, dueDate);
+      set((state) => {
+        const updatedList = state.groups.map((g) => (g._id === groupId ? data : g));
+        const updatedActive = state.activeGroup && state.activeGroup._id === groupId ? data : state.activeGroup;
+        return {
+          groups: updatedList,
+          activeGroup: updatedActive,
+        };
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to assign paper';
       throw new Error(message);
     }
   },
