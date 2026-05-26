@@ -1,0 +1,595 @@
+/* ===================================
+   ToolkitDashboard CSS Module
+   =================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.selectorHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-white-50);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  gap: 8px;
+}
+
+.sparkleHeading {
+  color: var(--brand-orange-start);
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+/* Tool Cards Grid */
+.toolGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.toolCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 32px;
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.toolCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(229, 104, 32, 0.25);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+}
+
+.cardIconWrapper {
+  background: rgba(229, 104, 32, 0.08);
+  color: var(--brand-orange-start);
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.toolCard:hover .cardIconWrapper {
+  background: var(--brand-gradient);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardBody h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.cardBody p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.arrowLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-orange-start);
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* Detail Form Views */
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--bg-white-50);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 16px 24px;
+}
+
+.detailHeader h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.backBtn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: var(--radius-btn);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.backBtn:hover {
+  border-color: var(--brand-orange-start);
+  color: var(--brand-orange-start);
+}
+
+.formCard {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 40px;
+  max-width: 600px;
+  align-self: center;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.formGroup input, .formGroup select, .formGroup textarea {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.formGroup input:focus, .formGroup select:focus, .formGroup textarea:focus {
+  border-color: var(--brand-orange-start);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.generateBtn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-btn);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.generateBtn:hover {
+  background: #2b2b2b;
+}
+
+/* Loading Panel Overlay */
+.loaderOverlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+  gap: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.spinningLoader {
+  color: var(--brand-orange-start);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loaderOverlay h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.loaderOverlay p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+/* Generated output container */
+.outputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.outputActionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: var(--bg-white-50);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 16px 24px;
+}
+
+.outputActionBar h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.actionCluster {
+  display: flex;
+  gap: 12px;
+}
+
+.actionBtn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-btn);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn:hover {
+  border-color: var(--brand-orange-start);
+  color: var(--brand-orange-start);
+}
+
+.downloadLinkBtn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-btn);
+  background: var(--brand-gradient);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(229, 104, 32, 0.15);
+}
+
+.downloadLinkBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(229, 104, 32, 0.25);
+}
+
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+/* Document Sheets styles */
+.rubricDoc, .lessonDoc {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-outer);
+  padding: 40px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+}
+
+.docTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.docSubtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.docMetaRow {
+  display: flex;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+/* Rubric Grid Matrix */
+.rubricGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.criteriaCard {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.criteriaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  padding-bottom: 12px;
+}
+
+.criteriaHeader h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.pointsBadge {
+  background: rgba(30, 58, 138, 0.08);
+  color: #1e3a8a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.levelsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.levelRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.04);
+}
+
+.levelRow:last-child {
+  border-bottom: none;
+}
+
+.levelNameCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.levelPoints {
+  font-size: 11px;
+  font-weight: 800;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.levelName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.levelDescCol p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Lesson Planner Timeline layout */
+.lessonSection {
+  margin-bottom: 32px;
+}
+
+.lessonSection:last-child {
+  margin-bottom: 0;
+}
+
+.sectionHeading {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.bulletList {
+  list-style: none;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bulletList li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  position: relative;
+  line-height: 1.4;
+  padding-left: 16px;
+}
+
+.bulletList li::before {
+  content: '•';
+  color: var(--brand-orange-start);
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px dashed var(--border-light);
+  margin-left: 12px;
+  margin-top: 12px;
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timelineDuration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand-orange-start);
+  background: rgba(229, 104, 32, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+  position: relative;
+}
+
+.timelineDuration::before {
+  content: '';
+  position: absolute;
+  left: -27px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brand-gradient);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--border-light);
+}
+
+.timelineContent h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.timelineContent p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.homeworkText {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1.5px dashed var(--border-dashed);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  .toolGrid {
+    grid-template-columns: 1fr;
+  }
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  .outputActionBar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+  .actionCluster {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .levelRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .rubricDoc, .lessonDoc {
+    padding: 24px;
+  }
+}

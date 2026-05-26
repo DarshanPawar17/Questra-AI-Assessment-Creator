@@ -219,3 +219,218 @@ export const generateQuestionsAI = async (params: {
     return generateMockQuestions(title, subject, grade, questionTypes, totalQuestions, totalMarks, additionalInstructions);
   }
 };
+
+// --- AI TEACHER TOOLKIT GENERATION UTILITIES ---
+
+// Fallback Mock Rubric Maker
+const generateMockRubric = (title: string, grade: string) => {
+  return {
+    title,
+    grade,
+    criteria: [
+      {
+        name: "Content & Subject Knowledge",
+        maxPoints: 10,
+        levels: [
+          { name: "Excellent", points: 10, description: "Demonstrates complete understanding of the topic with thorough, accurate, and original details." },
+          { name: "Good", points: 8, description: "Demonstrates a solid understanding of the topic with only minor errors or omissions." },
+          { name: "Basic", points: 6, description: "Demonstrates basic conceptual understanding, but has multiple inaccuracies or gaps." },
+          { name: "Below Standard", points: 4, description: "Fails to meet basic assignment requirements and shows poor understanding of concepts." }
+        ]
+      },
+      {
+        name: "Structure & Organization",
+        maxPoints: 10,
+        levels: [
+          { name: "Excellent", points: 10, description: "Logically organized with smooth transitions, a strong introduction, and a cohesive conclusion." },
+          { name: "Good", points: 8, description: "Clear organizational structure with only minor lapses in transition or paragraph flow." },
+          { name: "Basic", points: 6, description: "Somewhat disjointed with weak transitions, making structural flow difficult to trace." },
+          { name: "Below Standard", points: 4, description: "Lacks clear organization, causing content to appear completely disjointed and confusing." }
+        ]
+      },
+      {
+        name: "Clarity & Mechanics",
+        maxPoints: 5,
+        levels: [
+          { name: "Excellent", points: 5, description: "Free from grammatical, spelling, or punctuation errors. Written with sophisticated style." },
+          { name: "Good", points: 4, description: "Contains 1-3 minor mechanical errors that do not distract from readability or meaning." },
+          { name: "Basic", points: 3, description: "Contains multiple mechanical errors that occasionally hinder comprehension." },
+          { name: "Below Standard", points: 1.5, description: "Dominated by mechanical errors, rendering the text extremely difficult to read." }
+        ]
+      }
+    ]
+  };
+};
+
+// Fallback Mock Lesson Planner
+const generateMockLessonPlan = (topic: string, grade: string, duration: string) => {
+  return {
+    topic,
+    grade,
+    duration,
+    objectives: [
+      `Define and explain the core principles of ${topic} appropriate for ${grade}.`,
+      `Identify the real-world applications and significance of ${topic}.`,
+      `Formulate answers to basic problem sheets analyzing ${topic}.`
+    ],
+    materials: [
+      `Printed slides outlining key concepts of ${topic}`,
+      `Handout worksheet containing practice problems and questions`,
+      `Whiteboard markers and student notebook journals`
+    ],
+    activities: [
+      { name: "Introduction & Warm-up", duration: "10 minutes", description: `Introduce the core topic of ${topic}. Review prior concepts from previous lectures to hook students.` },
+      { name: "Core Concept Presentation", duration: "20 minutes", description: `Deliver the main points of the ${topic} syllabus, using visual slides, whiteboard diagrams, and class discussion.` },
+      { name: "Guided Group Activity", duration: "15 minutes", description: `Divide students into small groups to work through the practice problems on the ${topic} worksheet together.` },
+      { name: "Wrap-up & Exit Ticket", duration: "5 minutes", description: `Synthesize today's lesson. Administer a quick 1-question check for understanding (exit ticket).` }
+    ],
+    homework: `Complete practice exercise questions 1-5 on page 78 of the ${topic} workbook guide.`
+  };
+};
+
+// Call Gemini to generate a structured Rubric
+export const generateRubricAI = async (params: { title: string; grade: string }): Promise<any> => {
+  const { title, grade } = params;
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY' || apiKey === '') {
+    console.warn('GEMINI_API_KEY is not set or placeholder. Falling back to mock rubric generator.');
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return generateMockRubric(title, grade);
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.6,
+      },
+    });
+
+    const prompt = `
+      You are an expert grading assistant. Generate a highly detailed, professional grading rubric matrix for an assessment task.
+      
+      Task Title: "${title}"
+      Grade Level: "${grade}"
+      
+      INSTRUCTIONS:
+      1. Provide exactly 3 or 4 relevant criteria to grade (e.g. "Content Knowledge", "Structure & Organization", "Clarity & Grammar").
+      2. For each criteria, provide 4 levels of performance: "Excellent", "Good", "Basic", and "Below Standard".
+      3. Supply a clear, descriptive paragraph explaining what is expected at each level to guide teachers.
+      4. Assign point values logically (e.g., Excellent: 10, Good: 8, Basic: 6, Below Standard: 4).
+      5. Return ONLY a valid JSON object matching the target format. Do not write markdown wrappers like \`\`\`json. Just raw JSON.
+
+      Target JSON Format:
+      {
+        "title": "Creative Writing Essay",
+        "grade": "Grade 9",
+        "criteria": [
+          {
+            "name": "Criteria Name",
+            "maxPoints": 10,
+            "levels": [
+              { "name": "Excellent", "points": 10, "description": "Criteria descriptive guidelines..." },
+              { "name": "Good", "points": 8, "description": "Criteria descriptive guidelines..." },
+              { "name": "Basic", "points": 6, "description": "Criteria descriptive guidelines..." },
+              { "name": "Below Standard", "points": 4, "description": "Criteria descriptive guidelines..." }
+            ]
+          }
+        ]
+      }
+    `;
+
+    console.log(`Calling Gemini to generate rubric for: "${title}"...`);
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text().trim();
+    
+    let cleanedText = responseText;
+    if (cleanedText.startsWith('```')) {
+      cleanedText = cleanedText.replace(/^```(json)?/, '').replace(/```$/, '').trim();
+    }
+
+    return JSON.parse(cleanedText);
+  } catch (err) {
+    console.error('Gemini Rubric generation failed, falling back:', err);
+    return generateMockRubric(title, grade);
+  }
+};
+
+// Call Gemini to generate a structured Lesson Plan
+export const generateLessonPlanAI = async (params: { topic: string; grade: string; duration: string }): Promise<any> => {
+  const { topic, grade, duration } = params;
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY' || apiKey === '') {
+    console.warn('GEMINI_API_KEY is not set or placeholder. Falling back to mock lesson plan generator.');
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return generateMockLessonPlan(topic, grade, duration);
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.6,
+      },
+    });
+
+    const prompt = `
+      You are an expert pedagogy designer. Generate a structured classroom lesson plan.
+      
+      Topic: "${topic}"
+      Grade Level: "${grade}"
+      Duration: "${duration}"
+      
+      INSTRUCTIONS:
+      1. Define 2 or 3 clear, measurable student learning Objectives.
+      2. Provide a list of classroom Materials and resources needed for this lesson.
+      3. Create a series of time-blocked Activities that span the full lesson duration (e.g. Warm-up, presentation, guided practice, wrap-up).
+      4. Assign a clear duration (in minutes) and detailed instructions for each activity block.
+      5. Provide a constructive Homework assignment.
+      6. Return ONLY a valid JSON object matching the target format. Do not write markdown wrappers like \`\`\`json. Just raw JSON.
+
+      Target JSON Format:
+      {
+        "topic": "Photosynthesis",
+        "grade": "Grade 7",
+        "duration": "45 minutes",
+        "objectives": [
+          "Explain the chemical inputs and outputs of photosynthesis.",
+          "Identify chloroplasts as the cellular location of food production."
+        ],
+        "materials": [
+          "Diagram of plant cell structure",
+          "Dry-erase whiteboards and markers",
+          "Guided activity handouts"
+        ],
+        "activities": [
+          {
+            "name": "Introduction & Hook",
+            "duration": "10 minutes",
+            "description": "Engage students with a question about how plants eat..."
+          }
+        ],
+        "homework": "Read chapter review and complete section 3 exercises."
+      }
+    `;
+
+    console.log(`Calling Gemini to generate lesson plan for: "${topic}"...`);
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text().trim();
+
+    let cleanedText = responseText;
+    if (cleanedText.startsWith('```')) {
+      cleanedText = cleanedText.replace(/^```(json)?/, '').replace(/```$/, '').trim();
+    }
+
+    return JSON.parse(cleanedText);
+  } catch (err) {
+    console.error('Gemini Lesson plan generation failed, falling back:', err);
+    return generateMockLessonPlan(topic, grade, duration);
+  }
+};
+

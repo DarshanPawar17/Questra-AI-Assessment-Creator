@@ -219,3 +219,57 @@ export const groupApi = {
     }),
 };
 
+export interface IRubricLevel {
+  name: string;
+  points: number;
+  description: string;
+}
+
+export interface IRubricCriteria {
+  name: string;
+  maxPoints: number;
+  levels: IRubricLevel[];
+}
+
+export interface IRubric {
+  title: string;
+  grade: string;
+  criteria: IRubricCriteria[];
+}
+
+export interface ILessonActivity {
+  name: string;
+  duration: string;
+  description: string;
+}
+
+export interface ILessonPlan {
+  topic: string;
+  grade: string;
+  duration: string;
+  objectives: string[];
+  materials: string[];
+  activities: ILessonActivity[];
+  homework: string;
+}
+
+export const toolkitApi = {
+  generateRubric: (body: { title: string; grade: string }) =>
+    apiFetch<IRubric>('/api/toolkit/rubric', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  generateLessonPlan: (body: { topic: string; grade: string; duration: string }) =>
+    apiFetch<ILessonPlan>('/api/toolkit/lesson-plan', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+
+  exportPdf: (body: { type: 'rubric' | 'lesson'; data: any }) =>
+    apiFetch<{ pdfPath: string }>('/api/toolkit/export-pdf', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+};
+

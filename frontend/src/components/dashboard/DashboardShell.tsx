@@ -4,6 +4,7 @@ import { useStore } from '@/store/useStore';
 import Sidebar from './Sidebar';
 import AssignmentsDashboard from './AssignmentsDashboard';
 import GroupsDashboard from './GroupsDashboard';
+import ToolkitDashboard from './ToolkitDashboard';
 import { Sparkles, BookOpen, Users, Settings as SettingsIcon, FileText, Home as HomeIcon, LogOut, CheckCircle, Clock } from 'lucide-react';
 import styles from './DashboardShell.module.css';
 
@@ -71,13 +72,7 @@ export default function DashboardShell() {
         return <GroupsDashboard />;
 
       case 'toolkit':
-        return (
-          <div className={styles.placeholderContainer}>
-            <Sparkles size={48} className={styles.placeholderIcon} />
-            <h2>AI Teacher's Toolkit</h2>
-            <p>Access Quiz Generators, Rubric Makers, and Lesson Planners. (Feature coming soon)</p>
-          </div>
-        );
+        return <ToolkitDashboard />;
 
       case 'library':
         return (

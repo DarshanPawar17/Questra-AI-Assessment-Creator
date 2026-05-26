@@ -3,7 +3,7 @@
  * Manages: auth state, sidebar navigation, assignment data, search/filters, creation
  */
 import { create } from 'zustand';
-import { authApi, assignmentApi, groupApi, IAssignment, IGroup } from '@/lib/api';
+import { authApi, assignmentApi, groupApi, toolkitApi, IAssignment, IGroup, IRubric, ILessonPlan } from '@/lib/api';
 
 // ==================== Types ====================
 
@@ -55,6 +55,12 @@ interface AppState {
   isGroupsLoading: boolean;
   groupsError: string | null;
 
+  // Toolkit
+  activeRubric: IRubric | null;
+  activeLessonPlan: ILessonPlan | null;
+  isToolkitLoading: boolean;
+  toolkitError: string | null;
+
   // Actions - Auth
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
@@ -85,6 +91,12 @@ interface AppState {
   updateGroup: (id: string, body: Partial<IGroup>) => Promise<void>;
   deleteGroup: (id: string) => Promise<void>;
   assignPaperToGroup: (groupId: string, assignmentId: string, dueDate?: string) => Promise<void>;
+
+  // Actions - Toolkit
+  generateRubric: (title: string, grade: string) => Promise<IRubric>;
+  generateLessonPlan: (topic: string, grade: string, duration: string) => Promise<ILessonPlan>;
+  exportToolkitPdf: (type: 'rubric' | 'lesson', data: any) => Promise<string>;
+  clearToolkit: () => void;
 }
 
 // ==================== Store ====================
@@ -120,6 +132,12 @@ export const useStore = create<AppState>((set, get) => ({
   activeGroup: null,
   isGroupsLoading: false,
   groupsError: null,
+
+  // Toolkit state
+  activeRubric: null,
+  activeLessonPlan: null,
+  isToolkitLoading: false,
+  toolkitError: null,
 
   // ---- Auth Actions ----
 
@@ -173,6 +191,9 @@ export const useStore = create<AppState>((set, get) => ({
       activeAssignment: null,
       groups: [],
       activeGroup: null,
+      activeRubric: null,
+      activeLessonPlan: null,
+      toolkitError: null,
     });
   },
 
@@ -429,4 +450,47 @@ export const useStore = create<AppState>((set, get) => ({
       throw new Error(message);
     }
   },
+
+  // ---- Toolkit Actions ----
+
+  generateRubric: async (title, grade) => {
+    set({ isToolkitLoading: true, toolkitError: null, activeRubric: null });
+    try {
+      const rubric = await toolkitApi.generateRubric({ title, grade });
+      set({ activeRubric: rubric, isToolkitLoading: false });
+      return rubric;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to generate rubric';
+      set({ toolkitError: message, isToolkitLoading: false });
+      throw err;
+    }
+  },
+
+  generateLessonPlan: async (topic, grade, duration) => {
+    set({ isToolkitLoading: true, toolkitError: null, activeLessonPlan: null });
+    try {
+      const lessonPlan = await toolkitApi.generateLessonPlan({ topic, grade, duration });
+      set({ activeLessonPlan: lessonPlan, isToolkitLoading: false });
+      return lessonPlan;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to generate lesson plan';
+      set({ toolkitError: message, isToolkitLoading: false });
+      throw err;
+    }
+  },
+
+  exportToolkitPdf: async (type, data) => {
+    set({ isToolkitLoading: true, toolkitError: null });
+    try {
+      const res = await toolkitApi.exportPdf({ type, data });
+      set({ isToolkitLoading: false });
+      return res.pdfPath;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to export PDF';
+      set({ toolkitError: message, isToolkitLoading: false });
+      throw err;
+    }
+  },
+
+  clearToolkit: () => set({ activeRubric: null, activeLessonPlan: null, toolkitError: null }),
 }));
