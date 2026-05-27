@@ -6,6 +6,7 @@ import AssignmentsDashboard from './AssignmentsDashboard';
 import GroupsDashboard from './GroupsDashboard';
 import ToolkitDashboard from './ToolkitDashboard';
 import LibraryDashboard from './LibraryDashboard';
+import SettingsDashboard from './SettingsDashboard';
 import { Sparkles, BookOpen, Users, Settings as SettingsIcon, FileText, Home as HomeIcon, LogOut, CheckCircle, Clock } from 'lucide-react';
 import styles from './DashboardShell.module.css';
 
@@ -79,13 +80,7 @@ export default function DashboardShell() {
         return <LibraryDashboard />;
 
       case 'settings':
-        return (
-          <div className={styles.placeholderContainer}>
-            <SettingsIcon size={48} className={styles.placeholderIcon} />
-            <h2>System Settings</h2>
-            <p>Manage account notifications, API endpoints, and template default layouts. (Feature coming soon)</p>
-          </div>
-        );
+        return <SettingsDashboard />;
 
       default:
         return <AssignmentsDashboard />;

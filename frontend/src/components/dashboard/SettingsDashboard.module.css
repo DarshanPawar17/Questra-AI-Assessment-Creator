@@ -1,0 +1,430 @@
+/* ===================================
+   Settings Dashboard – Glassmorphic styling
+   =================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.headerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.headerTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.headerSub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-family: var(--font-secondary);
+}
+
+/* Tab Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-white-25);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 24px 16px;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+  background: var(--bg-white-50);
+  color: var(--text-primary);
+}
+
+.activeTabBtn {
+  background: var(--brand-gradient);
+  color: var(--text-white) !important;
+  box-shadow: 0 4px 12px rgba(229, 104, 32, 0.15);
+}
+
+/* Panel Content */
+.panel {
+  background: var(--bg-white-50);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card-inner);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.panelTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input, .select {
+  background: var(--bg-off-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-input);
+  padding: 14px 20px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-secondary);
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.input:focus, .select:focus {
+  border-color: var(--brand-orange-start);
+  background: var(--bg-white);
+  box-shadow: 0 0 0 3px rgba(229, 104, 32, 0.08);
+}
+
+.input:disabled {
+  background: var(--bg-off-white-alt);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Question Types Selector */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-secondary);
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  accent-color: var(--brand-orange-start);
+}
+
+/* Action Area */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.submitBtn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  padding: 12px 28px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-btn-inner);
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #000;
+}
+
+.submitBtn:disabled {
+  background: var(--bg-disabled);
+  color: var(--text-white);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Status Notifications */
+.statusMessage {
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.success {
+  background: rgba(75, 194, 109, 0.1);
+  border: 1px solid var(--green-active);
+  color: var(--green-active);
+}
+
+.error {
+  background: rgba(212, 94, 62, 0.1);
+  border: 1px solid var(--brand-orange-end);
+  color: var(--brand-orange-end);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Danger Zone Cards */
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dangerCard {
+  background: var(--bg-off-white);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardText h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cardText p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: var(--font-secondary);
+}
+
+.exportBtn {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 12px 24px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.exportBtn:hover {
+  background: var(--bg-off-white-alt);
+  border-color: var(--text-primary);
+}
+
+.dangerBtn {
+  background: rgba(214, 40, 40, 0.1);
+  border: 1px solid rgba(214, 40, 40, 0.4);
+  color: #D62828;
+  padding: 12px 24px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.dangerBtn:hover {
+  background: #D62828;
+  color: #fff;
+}
+
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid var(--border-light);
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #D62828;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.modalText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-family: var(--font-secondary);
+}
+
+.confirmationInput {
+  background: var(--bg-off-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: var(--font-secondary);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancelBtn {
+  background: var(--bg-off-white);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: var(--bg-off-white-40);
+}
+
+.confirmDeleteBtn {
+  background: #D62828;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.confirmDeleteBtn:disabled {
+  background: var(--bg-disabled);
+  cursor: not-allowed;
+}
+
+/* Responsive settings */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 24px;
+  }
+  .dangerCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

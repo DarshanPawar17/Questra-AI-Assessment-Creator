@@ -3,7 +3,7 @@
  * Manages: auth state, sidebar navigation, assignment data, search/filters, creation
  */
 import { create } from 'zustand';
-import { authApi, assignmentApi, groupApi, toolkitApi, libraryApi, IAssignment, IGroup, IRubric, ILessonPlan, ILibraryDoc } from '@/lib/api';
+import { authApi, assignmentApi, groupApi, toolkitApi, libraryApi, IAssignment, IGroup, IRubric, ILessonPlan, ILibraryDoc, IUserPreferences } from '@/lib/api';
 
 // ==================== Types ====================
 
@@ -11,6 +11,9 @@ export interface User {
   id: string;
   username: string;
   role: 'teacher' | 'admin';
+  fullName?: string;
+  email?: string;
+  preferences?: IUserPreferences;
 }
 
 type SidebarTab =
@@ -72,6 +75,15 @@ interface AppState {
   logout: () => void;
   restoreSession: () => Promise<void>;
   clearAuthError: () => void;
+  updateProfile: (body: {
+    username?: string;
+    fullName?: string;
+    email?: string;
+    preferences?: IUserPreferences;
+  }) => Promise<void>;
+  updatePassword: (body: { currentPassword?: string; newPassword?: string }) => Promise<void>;
+  deleteAccount: () => Promise<void>;
+
 
   // Actions - Navigation
   setActiveTab: (tab: SidebarTab) => void;
@@ -227,6 +239,9 @@ export const useStore = create<AppState>((set, get) => ({
           id: data.user._id,
           username: data.user.username,
           role: data.user.role,
+          fullName: data.user.fullName,
+          email: data.user.email,
+          preferences: data.user.preferences,
         },
         token,
         isAuthLoading: false,
@@ -242,6 +257,44 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   clearAuthError: () => set({ authError: null }),
+
+  updateProfile: async (body) => {
+    try {
+      const data = await authApi.updateProfile(body);
+      set({
+        user: {
+          id: data.user._id,
+          username: data.user.username,
+          role: data.user.role,
+          fullName: data.user.fullName,
+          email: data.user.email,
+          preferences: data.user.preferences,
+        }
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update profile';
+      throw new Error(message);
+    }
+  },
+
+  updatePassword: async (body) => {
+    try {
+      await authApi.updatePassword(body);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to update password';
+      throw new Error(message);
+    }
+  },
+
+  deleteAccount: async () => {
+    try {
+      await authApi.deleteAccount();
+      get().logout();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete account';
+      throw new Error(message);
+    }
+  },
 
   // ---- Navigation Actions ----
 

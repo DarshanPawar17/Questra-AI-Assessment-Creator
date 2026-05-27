@@ -48,6 +48,14 @@ export async function apiFetch<T = unknown>(
 
 // ==================== Auth API ====================
 
+export interface IUserPreferences {
+  theme?: 'light' | 'dark' | 'system';
+  defaultGrade?: string;
+  defaultSubject?: string;
+  defaultDifficulty?: 'Easy' | 'Moderate' | 'Hard';
+  defaultQuestionTypes?: ('MCQ' | 'TrueFalse' | 'Descriptive')[];
+}
+
 export interface AuthResponse {
   message: string;
   token: string;
@@ -55,6 +63,9 @@ export interface AuthResponse {
     id: string;
     username: string;
     role: 'teacher' | 'admin';
+    fullName?: string;
+    email?: string;
+    preferences?: IUserPreferences;
   };
 }
 
@@ -63,6 +74,9 @@ export interface UserProfile {
     _id: string;
     username: string;
     role: 'teacher' | 'admin';
+    fullName?: string;
+    email?: string;
+    preferences?: IUserPreferences;
     createdAt: string;
     updatedAt: string;
   };
@@ -82,7 +96,33 @@ export const authApi = {
     }),
 
   getProfile: () => apiFetch<UserProfile>('/api/auth/me'),
+
+  updateProfile: (body: {
+    username?: string;
+    fullName?: string;
+    email?: string;
+    preferences?: IUserPreferences;
+  }) =>
+    apiFetch<UserProfile>('/api/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+
+  updatePassword: (body: { currentPassword?: string; newPassword?: string }) =>
+    apiFetch<{ message: string }>('/api/auth/password', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+
+  deleteAccount: () =>
+    apiFetch<{ message: string }>('/api/auth/account', {
+      method: 'DELETE',
+    }),
+
+  exportData: () =>
+    apiFetch<any>('/api/auth/export'),
 };
+
 
 // ==================== Assignment API ====================
 

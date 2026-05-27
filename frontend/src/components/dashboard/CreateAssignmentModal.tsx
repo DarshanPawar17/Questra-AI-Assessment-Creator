@@ -10,7 +10,7 @@ interface CreateAssignmentModalProps {
 }
 
 export default function CreateAssignmentModal({ onClose }: CreateAssignmentModalProps) {
-  const { createAssignment, libraryDocs, fetchLibraryDocs } = useStore();
+  const { createAssignment, libraryDocs, fetchLibraryDocs, user } = useStore();
 
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,6 +36,18 @@ export default function CreateAssignmentModal({ onClose }: CreateAssignmentModal
   const [timeLimit, setTimeLimit] = useState(60);
   const [dueDate, setDueDate] = useState('');
   const [additionalInstructions, setAdditionalInstructions] = useState('');
+
+  // Hydrate fields from user default preferences
+  useEffect(() => {
+    if (user?.preferences) {
+      if (user.preferences.defaultGrade) setGrade(user.preferences.defaultGrade);
+      if (user.preferences.defaultSubject) setSubject(user.preferences.defaultSubject);
+      if (user.preferences.defaultQuestionTypes && user.preferences.defaultQuestionTypes.length > 0) {
+        setQuestionTypes(user.preferences.defaultQuestionTypes);
+      }
+    }
+  }, [user]);
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
